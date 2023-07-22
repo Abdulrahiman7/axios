@@ -3,15 +3,8 @@ var form=document.getElementById('newform');
 form.addEventListener('submit', newForm);
 var ul=document.createElement('ul');
 
-function newForm(e)
-{
-    e.preventDefault();
 
-    let nm=document.getElementById('name').value;
-    let no=document.getElementById('number').value;
-    let em=document.getElementById('email').value;
-    
-    
+function display(nm,no,em){
     var li=document.createElement('li');
     li.setAttribute('email-data',em);
     var text=document.createTextNode('name='+nm+'   no.='+no+" Submitted");
@@ -23,13 +16,23 @@ function newForm(e)
     li.appendChild(del);
     li.appendChild(edit);
     ul.appendChild(li);
+}
+function newForm(e)
+{
+    e.preventDefault();
+
+    let nm=document.getElementById('name').value;
+    let no=document.getElementById('number').value;
+    let em=document.getElementById('email').value;
+    
+    display(nm,no,em);
+    
 
     del.addEventListener('click',function()
     {
             var de=this.parentElement;
             ul.removeChild(de);
             var ema=de.getAttribute('email-data');  
-        localStorage.removeItem(ema);
     });
     edit.addEventListener('click',function(e)
     {
@@ -42,9 +45,7 @@ function newForm(e)
         n.value=no;
         var de=this.parentElement;
             var e=de.getAttribute('i');  
-        localStorage.removeItem(e);
     });
-form.appendChild(ul);
 var newitem={
     name:nm,
     email:em,
@@ -58,3 +59,17 @@ axios.post('https://crudcrud.com/api/c6c902a5fa894d978a0f9fe5eb66fefe/newuser',n
     console.log(err);
 } )
 }
+window.addEventListener('DOMContentLoaded',()=>{
+    axios.get('https://crudcrud.com/api/c6c902a5fa894d978a0f9fe5eb66fefe/newuser')
+    
+.then((resoponse) => {
+    for(let i=0;i<resoponse.data.length;i++){
+        display(resoponse.data[i].name,resoponse.data[i].number,resoponse.data[i].email);
+    console.log(resoponse.data[i]);
+} 
+})
+.catch((err) => {
+    console.log(err);
+})
+})
+form.appendChild(ul);
